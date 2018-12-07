@@ -12,6 +12,8 @@ import com.example.lyy.androidexperiment_notepad.Folder;
 import com.example.lyy.androidexperiment_notepad.Note;
 import com.example.lyy.androidexperiment_notepad.R;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class NoteListAdapter extends ArrayAdapter<Note>{
@@ -33,6 +35,7 @@ public class NoteListAdapter extends ArrayAdapter<Note>{
             viewHolder = new NoteListAdapter.ViewHolder();
             viewHolder.content=(TextView)view.findViewById(R.id.note_content);
             viewHolder.noteTitle = (TextView)view.findViewById(R.id.note_title);
+            viewHolder.timeLabel = (TextView)view.findViewById(R.id.time_label);
             view.setTag(viewHolder);
 
         } else {
@@ -41,11 +44,13 @@ public class NoteListAdapter extends ArrayAdapter<Note>{
         }
         viewHolder.content.setText(String.valueOf(note.getContent()));
         viewHolder.noteTitle.setText(note.getTitle());
+        viewHolder.timeLabel.setText(note.getDate());
         return view;
     }
 
     class ViewHolder{
         TextView content;
         TextView noteTitle;
+        TextView timeLabel;
     }
 }

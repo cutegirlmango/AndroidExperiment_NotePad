@@ -49,6 +49,7 @@
             android:textSize="20sp"
             android:textColor="#EAC100"
             android:id="@+id/textView"
+            android:onClick="newFolder"
             android:paddingBottom="10dp"/>
     </RelativeLayout>
 

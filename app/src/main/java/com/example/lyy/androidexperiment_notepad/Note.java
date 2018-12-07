@@ -7,7 +7,7 @@ public class Note {
     private String content;
     private int folderId;
     private String title;
-//    private Date date;
+    private String date;
 
     public String getTitle() {
         return title;
@@ -41,5 +41,11 @@ public class Note {
         this.folderId = folderId;
     }
 
+    public String getDate() {
+        return date;
+    }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

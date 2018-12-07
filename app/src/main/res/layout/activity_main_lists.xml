@@ -24,7 +24,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:text="Edit   "
+                android:text="Search   "
+                android:onClick="searchBtn"
                 android:id="@+id/folder_delete"
                 android:textColor="#EAC100"
                 android:textSize="20sp"/>

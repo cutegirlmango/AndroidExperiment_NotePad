@@ -5,7 +5,7 @@ import java.util.List;
 public class Folder {
     private int id;
     private String title;
-//    private List<Note> notes;
+    //    private List<Note> notes;
     private int note_num;
 
     public int getNote_num() {

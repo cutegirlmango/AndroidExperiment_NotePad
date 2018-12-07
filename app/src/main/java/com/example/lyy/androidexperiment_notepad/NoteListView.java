@@ -2,6 +2,8 @@ package com.example.lyy.androidexperiment_notepad;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +31,9 @@ public class NoteListView extends AppCompatActivity {
     private ListView lv;
     private NoteListAdapter noteListAdapter;
     private String foldername;
+    private int folderid;
+
+    private MyDatabaseHelper dbHelper;
 
     /**
      * Called when the activity is first created.
@@ -37,26 +42,47 @@ public class NoteListView extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_lists);
+        dbHelper = new MyDatabaseHelper(this,"Notedb.db", null,1);
         Toolbar toolbar = (Toolbar)findViewById(R.id.list_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         foldername = intent.getStringExtra("foldername");
+        folderid = Integer.parseInt(intent.getStringExtra("folderid"));
         this.setTitle(R.string.kong);
         TextView textView = findViewById(R.id.the_folder_name);
         textView.setText(foldername);
     }
 
-    private void initData() {
+    private void initData(String where) {
         noteList  = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Note note = new Note();
-            note.setId(1);
-            note.setFolderId(1);
-            note.setContent("从前的人，如果心里有了秘密，就会跑到山上找一棵树，在树上挖一个洞，对着树洞说出全部的秘密，再用泥巴把树洞封起来。");
-            note.setTitle("my secrete");
-            noteList.add(note);
+        where += (where.length() == 0 ? "" : " and" ) + " cid = " + folderid;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("note",null, where,null,null,null,"id desc",null);
+
+        if(cursor.moveToFirst()){
+            do{
+
+                Note note = new Note();
+                note.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                note.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+                note.setContent(cursor.getString(cursor.getColumnIndex("content")));
+                note.setDate(cursor.getString(cursor.getColumnIndex("time")));
+                noteList.add(note);
+            }while(cursor.moveToNext());
         }
+
+        cursor.close();
+
+//        for (int i = 0; i < 5; i++) {
+//            Note note = new Note();
+//            note.setId(1);
+//            note.setFolderId(1);
+//            note.setContent("从前的人，如果心里有了秘密，就会跑到山上找一棵树，在树上挖一个洞，对着树洞说出全部的秘密，再用泥巴把树洞封起来。");
+//            note.setTitle("my secrete");
+//            noteList.add(note);
+//        }
+
         noteListAdapter = new NoteListAdapter(NoteListView.this, R.layout.noteitem, noteList);
         lv = (ListView) findViewById(R.id.list);
         this.registerForContextMenu(lv);
@@ -67,6 +93,8 @@ public class NoteListView extends AppCompatActivity {
                 Note note = noteList.get(position);
                 Intent intent = new Intent();
                 intent.putExtra("foldername",foldername);
+                intent.putExtra("folderid","" +folderid);
+                intent.putExtra("note_id","" + note.getId());
                 intent.putExtra("title",note.getTitle());
                 intent.putExtra("content", note.getContent());
                 intent.setClass(NoteListView.this, ContentPage.class);
@@ -77,14 +105,18 @@ public class NoteListView extends AppCompatActivity {
     public void onDeleteFolderClick(View view){
         finish();
     }
+
     public void onNewNoteClick(View view){
         final Note note = new Note();
         Intent intent = new Intent();
         intent.putExtra("foldername",foldername);
+        intent.putExtra("folderid",""+folderid);
+        intent.putExtra("note_id", "0");
         intent.putExtra("content","");
         intent.setClass(NoteListView.this, ContentPage.class);
         NoteListView.this.startActivity(intent);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -103,6 +135,7 @@ public class NoteListView extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final int pos=(int)lv.getAdapter().getItemId(menuInfo.position);
         switch (item.getItemId()) {
@@ -128,7 +161,9 @@ public class NoteListView extends AppCompatActivity {
                 builder.show();
                 break;
             case 2:
+                int cId = noteList.get(pos).getId();
                 if(noteList.remove(pos)!=null){//这行代码必须有
+                    db.execSQL("delete from note where id = " + cId);
                     System.out.println("success");
                 }else {
                     System.out.println("failed");
@@ -146,7 +181,24 @@ public class NoteListView extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         System.out.println("start");
-        initData();
+        initData("");
+    }
+
+    protected void searchBtn(View view){
+        final EditText inputServer = new EditText(this);
+        inputServer.setFocusable(true);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("搜索").setView(inputServer).setNegativeButton("关闭", null);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String inputName = inputServer.getText().toString();
+                String sql = "title like '%" + inputName + "%'" + " or " + "content like '%" + inputName + "%'";
+                System.out.println(sql);
+                initData(sql);
+            }
+        });
+        builder.show();
     }
 }
 
