@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.lyy.androidexperiment_notepad.Folder;
-import com.example.lyy.androidexperiment_notepad.Note;
+import com.example.lyy.androidexperiment_notepad.Model.Note;
 import com.example.lyy.androidexperiment_notepad.R;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

@@ -13,13 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.lyy.androidexperiment_notepad.adapter.FoldersAdapter;
+import com.example.lyy.androidexperiment_notepad.Model.Note;
 import com.example.lyy.androidexperiment_notepad.adapter.NoteListAdapter;
 
 import java.util.ArrayList;
@@ -73,15 +72,6 @@ public class NoteListView extends AppCompatActivity {
         }
 
         cursor.close();
-
-//        for (int i = 0; i < 5; i++) {
-//            Note note = new Note();
-//            note.setId(1);
-//            note.setFolderId(1);
-//            note.setContent("从前的人，如果心里有了秘密，就会跑到山上找一棵树，在树上挖一个洞，对着树洞说出全部的秘密，再用泥巴把树洞封起来。");
-//            note.setTitle("my secrete");
-//            noteList.add(note);
-//        }
 
         noteListAdapter = new NoteListAdapter(NoteListView.this, R.layout.noteitem, noteList);
         lv = (ListView) findViewById(R.id.list);
@@ -162,7 +152,7 @@ public class NoteListView extends AppCompatActivity {
                 break;
             case 2:
                 int cId = noteList.get(pos).getId();
-                if(noteList.remove(pos)!=null){//这行代码必须有
+                if(noteList.remove(pos)!=null){
                     db.execSQL("delete from note where id = " + cId);
                     System.out.println("success");
                 }else {

@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:id="@+id/notes_number"
         android:text="1"
-        android:textSize="20sp"
+        android:textSize="0sp"
         android:textColor="#000000"
         />
 </LinearLayout>

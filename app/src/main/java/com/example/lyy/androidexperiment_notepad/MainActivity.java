@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lyy.androidexperiment_notepad.Model.Folder;
+import com.example.lyy.androidexperiment_notepad.Model.Note;
 import com.example.lyy.androidexperiment_notepad.adapter.FoldersAdapter;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,17 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 FolderList.add(folder);
             }while(cursor.moveToNext());
         }
-
         cursor.close();
-//
-//        for(int i = 0; i< 5; i++){
-//            Folder folder = new Folder();
-//            folder.setId(i);
-//            folder.setTitle("第"+i+"个folder");
-//            folder.setNote_num(7);
-//            FolderList.add(folder);
-//            notes.clear();
-//        }
         adapterListView = new FoldersAdapter(MainActivity.this,R.layout.folderitem,FolderList);
         lv = (ListView)findViewById(R.id.lv);
         this.registerForContextMenu(lv);
