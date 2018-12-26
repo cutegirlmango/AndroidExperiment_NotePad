@@ -1,4 +1,4 @@
-package com.example.lyy.androidexperiment_notepad;
+package com.example.lyy.androidexperiment_notepad.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lyy.androidexperiment_notepad.Model.Note;
+import com.example.lyy.androidexperiment_notepad.MyDatabaseHelper;
+import com.example.lyy.androidexperiment_notepad.R;
 import com.example.lyy.androidexperiment_notepad.adapter.NoteListAdapter;
 
 import java.util.ArrayList;
